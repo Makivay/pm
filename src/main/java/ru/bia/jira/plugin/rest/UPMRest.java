@@ -14,7 +14,9 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.LinkedList;
+import java.util.List;
 
 
 @Path("/monitor")
@@ -32,11 +34,6 @@ public class UPMRest {
         this.customFieldManager = ComponentAccessor.getCustomFieldManager();
     }
 
-//    public UPMRest(ProjectManager projectManager, IssueManager issueManager) {
-//        this.issueManager = issueManager;
-//        this.projectManager = projectManager;
-//    }
-
     @GET
     @Produces({MediaType.TEXT_PLAIN})
     @Path("/test")
@@ -49,7 +46,7 @@ public class UPMRest {
     @Produces({MediaType.APPLICATION_JSON})
     @Path("/getAll")
     public Response getAll() {
-        Collection<TableRowModel3> answer = new LinkedList<TableRowModel3>();
+        List<TableRowModel3> answer = new LinkedList<TableRowModel3>();
         final String name = "JIRAPLUGIN";
         Project project;
         Long aLong;
@@ -59,10 +56,23 @@ public class UPMRest {
             if (project != null) {
                 aLong = project.getId();
                 issues = issueManager.getIssueIdsForProject(aLong);
+                TableRowModel3 curModel;
+                boolean find = false;
                 for (Long issue : issues) {
-                    answer.add(new TableRowModel3(issueManager.getIssueObject(issue)));
+                    curModel = new TableRowModel3(issueManager.getIssueObject(issue));
+                    for (TableRowModel3 row : answer) {
+                        if(row.getComponent().equals(curModel.getComponent())){
+                            find = true;
+                            if(curModel.younger(row)){
+                                Collections.replaceAll(answer, row, curModel);
+                            }
+                        }
+                    }
+                    if(!find){
+                        answer.add(curModel);
+                    }
+                    find = false;
                 }
-            } else{
             }
         } catch (Exception e) {
         }

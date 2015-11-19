@@ -8,10 +8,10 @@
     </plugin-info>
 
     <!-- add our i18n resource -->
-    <resource type="i18n" name="i18n" location="UniversalPluginMonitor"/>
+    <resource type="i18n" name="i18n" location="PluginsMonitor"/>
     
     <!-- add our web resources -->
-    <web-resource key="UniversalPluginMonitor-resources" name="UniversalPluginMonitor Web Resources">
+    <web-resource key="PluginMonitor-resources" name="PluginMonitor Web Resources">
         <dependency>com.atlassian.auiplugin:ajs</dependency>
         <dependency>com.atlassian.auiplugin:aui-experimental-restfultable</dependency>
         <resource type="download" name="UniversalPluginMonitor.css" location="/css/UniversalPluginMonitor.css"/>
@@ -27,16 +27,16 @@
 
     <webwork1 key="AwesomnesMainPanel" name="AwesomnesMainPanel" i18n-name-key="AwesomnesMainPanel">
         <actions>
-            <action name="ru.bia.jira.plugin.actions.MainAction" alias="UPM">
+            <action name="ru.bia.jira.plugin.actions.MainAction" alias="pluginmonitor">
                 <view name="input">vm/Main.vm</view>
             </action>
         </actions>
     </webwork1>
 
-    <!--<web-item key="main_button" name="Main Button" section="system.top.navigation.bar" weight="90">-->
-        <!--<label key="UPM"/>-->
-        <!--<link>/secure/UPM.jspa</link>-->
-    <!--</web-item>-->
+    <web-item key="main_button" name="Main Button" section="admin_plugins_menu/admin-helper-admin-section" weight="90">
+        <label key="Plugins Monitor"/>
+        <link>/secure/UPM.jspa</link>
+    </web-item>
 
     <!-- import from the product container -->
 

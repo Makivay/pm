@@ -6,7 +6,6 @@ import com.atlassian.jira.issue.MutableIssue;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
-
 /**
  * Created by Kmatveev on 16.11.2015.
  */
@@ -35,8 +34,8 @@ public class TableRowModel3 {
         this.creationDate = String.valueOf(mutableIssue.getCreated());
         this.dependency = String.valueOf(mutableIssue.getCustomFieldValue(customFieldManager.getCustomFieldObject(12703l)));
         this.description = mutableIssue.getDescription();
-        if(link != null) {
-            if (!link.equals("null")){
+        if (link != null) {
+            if (!link.equals("null")) {
                 this.link = link;
             } else {
                 this.link = "#";
@@ -45,4 +44,47 @@ public class TableRowModel3 {
             this.link = "#";
         }
     }
-}
+
+    public boolean younger(TableRowModel3 tableRowModel) {
+        final int length = this.creationDate.length();
+        final String self = this.creationDate;
+        final String quest = tableRowModel.getCreationDate();
+
+        char cSelf;
+        char cQuest;
+        for (int i = 0; i < length; i++) {
+            cSelf = self.charAt(i);
+            cQuest = quest.charAt(i);
+            if (cSelf > cQuest) {
+                return true;
+            } else if (cSelf < cQuest) {
+                return false;
+            }
+        }
+        return false;
+    }
+
+public String getComponent(){
+        return component;
+        }
+
+public String getVersion(){
+        return version;
+        }
+
+public String getCreationDate(){
+        return creationDate;
+        }
+
+public String getDependency(){
+        return dependency;
+        }
+
+public String getDescription(){
+        return description;
+        }
+
+public String getLink(){
+        return link;
+        }
+        }

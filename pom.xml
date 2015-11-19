@@ -6,7 +6,7 @@
 
     <modelVersion>4.0.0</modelVersion>
     <groupId>ru.bia.jira.plugins</groupId>
-    <artifactId>UniversalPluginMonitor</artifactId>
+    <artifactId>PluginMonitor</artifactId>
     <version>1.0</version>
 
     <organization>
