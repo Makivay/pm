@@ -1,0 +1,43 @@
+<atlassian-plugin key="${project.groupId}.${project.artifactId}" name="${project.name}" plugins-version="2">
+    <plugin-info>
+        <description>${project.description}</description>
+        <version>${project.version}</version>
+        <vendor name="${project.organization.name}" url="${project.organization.url}" />
+        <param name="plugin-icon">images/pluginIcon.png</param>
+        <param name="plugin-logo">images/pluginLogo.png</param>
+    </plugin-info>
+
+    <!-- add our i18n resource -->
+    <resource type="i18n" name="i18n" location="UniversalPluginMonitor"/>
+    
+    <!-- add our web resources -->
+    <web-resource key="UniversalPluginMonitor-resources" name="UniversalPluginMonitor Web Resources">
+        <dependency>com.atlassian.auiplugin:ajs</dependency>
+        <dependency>com.atlassian.auiplugin:aui-experimental-restfultable</dependency>
+        <resource type="download" name="UniversalPluginMonitor.css" location="/css/UniversalPluginMonitor.css"/>
+        <resource type="download" name="UniversalPluginMonitor.js" location="/js/UniversalPluginMonitor.js"/>
+        <resource type="download" name="images/" location="/images"/>
+        <context>UniversalPluginMonitor</context>
+    </web-resource>
+    
+    <!-- publish our component -->
+    <rest key="rest-module-unipm" path="/upmonitor" version="1.0">
+        <description>Yes, this plugin realy use rest services.</description>
+    </rest>
+
+    <webwork1 key="AwesomnesMainPanel" name="AwesomnesMainPanel" i18n-name-key="AwesomnesMainPanel">
+        <actions>
+            <action name="ru.bia.jira.plugin.actions.MainAction" alias="UPM">
+                <view name="input">vm/Main.vm</view>
+            </action>
+        </actions>
+    </webwork1>
+
+    <!--<web-item key="main_button" name="Main Button" section="system.top.navigation.bar" weight="90">-->
+        <!--<label key="UPM"/>-->
+        <!--<link>/secure/UPM.jspa</link>-->
+    <!--</web-item>-->
+
+    <!-- import from the product container -->
+
+</atlassian-plugin>

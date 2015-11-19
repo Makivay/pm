@@ -1,0 +1,69 @@
+<html>
+<head>
+    <title>UniversalPluginMonitor</title>
+    <meta name="decorator" content="atl.admin" />
+    $webResourceManager.requireResource("ru.bia.jira.plugins.UniversalPluginMonitor:UniversalPluginMonitor-resources")
+
+    <script>
+        function getLink(){
+            return AJS.RestfulTable.CustomReadView.extend({
+                render:function(self){
+                    if (self !== undefined){
+                        this.el.innerHTML = "<a href=\"" + self.value + "\" >link</a>";
+                        }
+                    return this.el;
+                }
+            })
+        }
+        jQuery(document).ready(function(){
+            var rt = new AJS.RestfulTable({
+                allowCreate: false,
+                allowEdit: false,
+                allowReorder: false,
+                allowDelete: false,
+                reverseOrder: true,
+                el: jQuery(".restful"),
+                resources: {
+                    all: AJS.contextPath()+"/rest/upmonitor/latest/monitor/getAll",
+                    self: AJS.contextPath()+"/rest/upmonitor/latest/monitor"
+                },
+                columns: [
+                    {
+                        id: "component",
+                        header: "component",
+                    },
+                    {
+                        id: "version",
+                        header: "version",
+                    },
+                    {
+                        id: "creationDate",
+                        header: "creationDate",
+                    },
+                    {
+                        id: "dependency",
+                        header: "dependency",
+                    },
+                    {
+                        id: "description",
+                        header: "description",
+                    },
+                    {
+                         id: "link",
+                         header: "link",
+                         readView: getLink(),
+                     }
+                ]
+            });
+        })
+    </script>
+
+</head>
+<body>
+
+<h1>Universal plugin monitor.</h1>.
+
+<table class='restful'>
+</table>
+
+</html>
