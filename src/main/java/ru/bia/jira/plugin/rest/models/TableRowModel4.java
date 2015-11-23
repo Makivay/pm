@@ -3,16 +3,18 @@ package ru.bia.jira.plugin.rest.models;
 import com.atlassian.jira.component.ComponentAccessor;
 import com.atlassian.jira.issue.CustomFieldManager;
 import com.atlassian.jira.issue.MutableIssue;
+import com.atlassian.jira.util.json.JSONArray;
+import com.atlassian.jira.util.json.JSONObject;
 
 import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
 
 /**
- * Created by Kmatveev on 16.11.2015.
+ * Created by Kmatveev on 23.11.2015.
  */
-@XmlRootElement
-public class TableRowModel3 {
+public class TableRowModel4 extends ModelUtilities {
 
+    @XmlElement
+    String condition;
     @XmlElement
     String component;
     @XmlElement
@@ -26,10 +28,11 @@ public class TableRowModel3 {
     @XmlElement
     String link;
 
-    public TableRowModel3(MutableIssue mutableIssue) {
+    public TableRowModel4(MutableIssue mutableIssue, JSONArray pluginsInfo) {
         CustomFieldManager customFieldManager = ComponentAccessor.getCustomFieldManager();
         String link = String.valueOf(mutableIssue.getCustomFieldValue(customFieldManager.getCustomFieldObject(10004l)));
         this.component = mutableIssue.getComponentObjects().iterator().next().getName();
+        this.condition = getCondition(pluginsInfo, this.component);
         this.version = ModelUtilities.getVersion(link);
         //TODO: SimpleDateFormat created = new SimpleDateFormat("dd-MM-yyyy hh:mm");
         this.creationDate = String.valueOf(mutableIssue.getCreated());
@@ -46,7 +49,23 @@ public class TableRowModel3 {
         }
     }
 
-    public boolean younger(TableRowModel3 tableRowModel) {
+    public JSONObject toJSON(){
+        JSONObject object = new JSONObject();
+        try {
+            object.put("condition", new JSONObject(this.condition));
+            object.put("component", this.component);
+            object.put("version", this.version);
+            object.put("creationDate", this.creationDate);
+            object.put("dependency", this.dependency);
+            object.put("description", this.description);
+            object.put("link", this.link);
+        } catch (Exception e){
+
+        }
+        return object;
+    }
+
+    public boolean younger(TableRowModel4 tableRowModel) {
         final int length = this.creationDate.length();
         final String self = this.creationDate;
         final String quest = tableRowModel.getCreationDate();
@@ -63,6 +82,10 @@ public class TableRowModel3 {
             }
         }
         return false;
+    }
+
+    public String getCondition() {
+        return condition;
     }
 
     public String getComponent() {
@@ -83,10 +106,6 @@ public class TableRowModel3 {
 
     public String getDescription() {
         return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
     }
 
     public String getLink() {

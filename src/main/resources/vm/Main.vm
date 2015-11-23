@@ -11,11 +11,5 @@
 
 <table class='restful'>
 </table>
-<p>
-    <span class="aui-lozenge aui-lozenge-success">enabled</span>
-    <span class="aui-lozenge aui-lozenge-current">disabled</span>
-    <span class="aui-lozenge aui-lozenge-error">not installed</span>
-</p>
-
 
 </html>

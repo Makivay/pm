@@ -1,5 +1,8 @@
 package ru.bia.jira.plugin.rest.models;
 
+import com.atlassian.jira.util.json.JSONArray;
+import com.atlassian.jira.util.json.JSONObject;
+
 import java.util.regex.MatchResult;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -28,6 +31,33 @@ public class ModelUtilities {
             }
         } catch (Exception e) {
             answer.append(e.toString());
+        }
+        return answer.toString();
+    }
+
+    public static String getCondition(JSONArray array, String componenet){
+        JSONObject answer = new JSONObject();
+        try {
+            JSONObject object;
+            boolean found = false;
+            for (int i = 0; i < array.length(); i++) {
+                object = array.getJSONObject(i);
+                if (object.get("key").equals(componenet)) {
+                    found = true;
+                    if(object.get("enabled").equals(true)){
+                        answer.put("enabled", "enabled");
+                    } else {
+                        answer.put("enabled", "disabled");
+                    }
+
+                    answer.put("version", object.get("version"));
+                }
+            }
+            if(!found){
+                answer.put("enabled", "NOT INSTALLED");
+                answer.put("version", "null");
+            }
+        }catch (Exception e){
         }
         return answer.toString();
     }

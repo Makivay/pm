@@ -1,0 +1,21 @@
+{namespace Dialog}
+
+/**
+ * @param data
+ *  data.content - main panel content
+ *  data.header  - dialog header
+ */
+{template .section}
+    <section role="dialog" id="demo-dialog" class="aui-layer aui-dialog2 aui-dialog2-medium" aria-hidden="true">
+        <header class="aui-dialog2-header">
+            <h1 class="aui-dialog2-header-main">{data.header}</h1>
+        </header>
+        <div class="aui-dialog2-content">
+            {$data.content}
+        </div>
+        <footer class="aui-dialog2-footer">
+            <div class="aui-dialog2-footer-actions">
+                <button id="dialog-close-button" class="aui-button aui-button-link">Close</button>
+            </div>
+    </section>
+{/template}

@@ -16,6 +16,7 @@
         <dependency>com.atlassian.auiplugin:aui-experimental-restfultable</dependency>
         <resource type="download" name="UniversalPluginMonitor.css" location="/css/UniversalPluginMonitor.css"/>
         <resource type="download" name="UniversalPluginMonitor.js" location="/js/UniversalPluginMonitor.js"/>
+        <resource type="download" name="AnalogsShowDialog.js" location="/js/AnalogsShowDialog.js"/>
         <resource type="download" name="images/" location="/images"/>
         <context>UniversalPluginMonitor</context>
     </web-resource>
@@ -35,8 +36,9 @@
 
     <web-item key="main_button" name="Main Button" section="admin_plugins_menu/admin-helper-admin-section" weight="90">
         <label key="Plugins Monitor"/>
-        <link>/secure/UPM.jspa</link>
+        <link>/secure/pluginmonitor.jspa</link>
     </web-item>
+
 
     <!-- import from the product container -->
 

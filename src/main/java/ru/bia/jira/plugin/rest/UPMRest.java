@@ -5,14 +5,19 @@ import com.atlassian.jira.issue.CustomFieldManager;
 import com.atlassian.jira.issue.IssueManager;
 import com.atlassian.jira.project.Project;
 import com.atlassian.jira.project.ProjectManager;
+import com.atlassian.jira.util.json.JSONArray;
+import com.atlassian.jira.util.json.JSONObject;
 import com.atlassian.plugins.rest.common.security.AnonymousAllowed;
-import ru.bia.jira.plugin.rest.models.TableRowModel3;
+import com.squareup.okhttp.OkHttpClient;
+import com.squareup.okhttp.Request;
+import ru.bia.jira.plugin.rest.models.TableRowModel4;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.io.IOException;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedList;
@@ -24,6 +29,12 @@ import java.util.List;
 @Produces({MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN})
 public class UPMRest {
 
+    String baseUrl;
+    OkHttpClient client;
+
+    private final String PROJECT_KEY = "JIRAPLUGIN";
+    private final String UPM_URL = "https://jira-test.dellin.ru/rest/plugins/1.0/";
+
     ProjectManager projectManager;
     IssueManager issueManager;
     CustomFieldManager customFieldManager;
@@ -32,21 +43,28 @@ public class UPMRest {
         this.issueManager = ComponentAccessor.getIssueManager();
         this.projectManager = ComponentAccessor.getProjectManager();
         this.customFieldManager = ComponentAccessor.getCustomFieldManager();
+        this.baseUrl = ComponentAccessor.getWebResourceUrlProvider().getBaseUrl();
+        client = new OkHttpClient();
     }
 
     @GET
-    @Produces({MediaType.TEXT_PLAIN})
+    @Produces({MediaType.APPLICATION_JSON})
     @Path("/test")
     public Response getSomething() {
-        return Response.ok("Ok!").build();
+        JSONArray answer = new JSONArray();
+        try {
+            String resp = run("https://jira-test.dellin.ru/rest/plugins/1.0/");
+            answer = new JSONObject(resp).getJSONArray("plugins");
+        } catch (Exception e){
+        }
+        return Response.ok(answer.toString()).build();
     }
 
     @GET
-    @AnonymousAllowed
     @Produces({MediaType.APPLICATION_JSON})
-    @Path("/getAll")
-    public Response getAll() {
-        List<TableRowModel3> answer = new LinkedList<TableRowModel3>();
+    @Path("/test2")
+    public Response getSomething2() {
+        JSONArray answer = new JSONArray();
         final String name = "JIRAPLUGIN";
         Project project;
         Long aLong;
@@ -56,19 +74,61 @@ public class UPMRest {
             if (project != null) {
                 aLong = project.getId();
                 issues = issueManager.getIssueIdsForProject(aLong);
-                TableRowModel3 curModel;
+                JSONObject curModel;
                 boolean find = false;
+                JSONArray pluginsInfo = getPluginsInfo();
                 for (Long issue : issues) {
-                    curModel = new TableRowModel3(issueManager.getIssueObject(issue));
-                    for (TableRowModel3 row : answer) {
-                        if(row.getComponent().equals(curModel.getComponent())){
+                    curModel = new TableRowModel4(issueManager.getIssueObject(issue), pluginsInfo).toJSON();
+                    for (int i = 0; i < answer.length(); i++) {
+                        if (answer.getJSONObject(i).get("component").equals(curModel.get("component"))) {
                             find = true;
-                            if(curModel.younger(row)){
+                            if (compareData(curModel.get("creationDate").toString(), answer.get(i).toString())) {
+                                answer.put(curModel);
+                            }
+                        }
+                    }
+                    if (!find) {
+                        answer.put(curModel);
+                    }
+                    find = false;
+                }
+            }
+        } catch (Exception e) {
+        }
+        return Response.ok(answer.toString()).build();
+    }
+
+
+
+    @GET
+    @AnonymousAllowed
+    @Produces({MediaType.APPLICATION_JSON})
+    @Path("/getAll")
+    public Response getAll() {
+        List<TableRowModel4> answer = new LinkedList<TableRowModel4>();
+        final String name = "JIRAPLUGIN";
+        Project project;
+        Long aLong;
+        Collection<Long> issues;
+        try {
+            project = projectManager.getProjectByCurrentKey(name);
+            if (project != null) {
+                aLong = project.getId();
+                issues = issueManager.getIssueIdsForProject(aLong);
+                TableRowModel4 curModel;
+                boolean find = false;
+                JSONArray pluginsInfo = getPluginsInfo();
+                for (Long issue : issues) {
+                    curModel = new TableRowModel4(issueManager.getIssueObject(issue), pluginsInfo);
+                    for (TableRowModel4 row : answer) {
+                        if (row.getComponent().equals(curModel.getComponent())) {
+                            find = true;
+                            if (curModel.younger(row)) {
                                 Collections.replaceAll(answer, row, curModel);
                             }
                         }
                     }
-                    if(!find){
+                    if (!find) {
                         answer.add(curModel);
                     }
                     find = false;
@@ -76,7 +136,49 @@ public class UPMRest {
             }
         } catch (Exception e) {
         }
-        return Response.ok(answer).build();
+        JSONArray jsonArray = new JSONArray();
+        for (TableRowModel4 tableRowModel4 : answer) {
+            jsonArray.put(tableRowModel4.toJSON());
+        }
+        return Response.ok(jsonArray.toString()).build();
+    }
+
+    public boolean compareData(String data1, String data2) {
+        char cSelf;
+        char cQuest;
+        for (int i = 0; i < data1.length(); i++) {
+            cSelf = data1.charAt(i);
+            cQuest = data2.charAt(i);
+            if (cSelf > cQuest) {
+                return true;
+            } else if (cSelf < cQuest) {
+                return false;
+            }
+        }
+        return false;
+    }
+
+    private JSONArray getPluginsInfo() {
+
+        JSONArray array;
+        try {
+            String resp = run(UPM_URL);
+            array = new JSONObject(resp).getJSONArray("plugins");
+        } catch (Exception e) {
+            array = null;
+        }
+        return array;
+    }
+
+   String run(String url) throws IOException {
+        Request request = new Request.Builder()
+                .url(url)
+                .addHeader("Authorization", "Basic S01hdHZlZXY6N2FmR2hkZ0tUcVlZ")
+                .build();
+
+        com.squareup.okhttp.Response response;
+        response = client.newCall(request).execute();
+        return response.body().string();
     }
 
 }

@@ -123,5 +123,7 @@
     <orderEntry type="library" scope="PROVIDED" name="Maven: javax.xml.stream:stax-api:1.0-2" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: org.hibernate:hibernate-validator:4.0.2.GA" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: javax.validation:validation-api:1.0.0.GA" level="project" />
+    <orderEntry type="library" name="Maven: com.squareup.okhttp:okhttp:2.6.0" level="project" />
+    <orderEntry type="library" name="Maven: com.squareup.okio:okio:1.6.0" level="project" />
   </component>
 </module>
