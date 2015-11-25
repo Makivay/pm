@@ -1,0 +1,20 @@
+<html>
+<head>
+    <title>Plugins monitor</title>
+    <meta name="decorator" content="atl.user" />
+    $webResourceManager.requireResource("ru.bia.jira.plugins.PluginsMonitor:PluginMonitor-error-resources")
+
+</head>
+<body>
+
+<div class="aui-message error">
+    <p class="title">
+        <span class="aui-icon icon-error"></span>
+        <strong>Authorization error.</strong>
+    </p>
+    <p>User not authorizated!</p>
+</div><!-- .aui-message -->
+
+
+</body>
+</html>

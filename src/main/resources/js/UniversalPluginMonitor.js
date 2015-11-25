@@ -85,14 +85,63 @@ function getVersion(){
     })
 }
 
-function addRestfulTable(){
+function getNotice(){
+    return AJS.RestfulTable.CustomReadView.extend({
+        events:{ "click":"onClick" },
+        render:function(self){
+            var element = this.el;
+            //console.log(this.model.get("component"));
+            this.state = this.model.get("notice");
+            this.$input = jQuery('<input type="button" class="aui-button"/>');
+            this.$el.append(this.$input);
+            if(this.state){
+                this.$input.addClass("aui-button-primary");
+                this.$input.val("on")
+            } else {
+                this.$input.val("off");
+            }
+//            if(self.value === true){
+//                this.el.innerHTML = "<input type=\"button\" class=\"aui-button aui-button-primary\" value=\"on\">";
+//            } else {
+//                this.el.innerHTML = "<input type=\"button\" class=\"aui-button\" value=\"off\">";
+//            }
+
+//            jQuery(element).on('click', function(){
+//                var value = jQuery(element).children('input').val();
+//                if(value === "on"){
+//                    jQuery(element).find('input').removeClass('aui-button-primary');
+//                    jQuery(element).children('input').val('off')
+//                } else if(value === "off"){
+//                    jQuery(element).children('input').addClass('aui-button-primary');
+//                    jQuery(element).children('input').val('on')
+//                }
+//            });
+            return element;
+        },
+
+        onClick: function(){
+            this.state = !this.state;
+            if(this.state){
+                this.$input.addClass("aui-button-primary");
+                this.$input.val("on");
+            }
+            else{
+                this.$input.removeClass("aui-button-primary");
+                this.$input.val("off");
+            }
+            this.model.set("notice",this.state);
+            this.model.save();
+        }
+    })
+}
+function addRestfulTable(target){
     new AJS.RestfulTable({
         allowCreate: false,
         allowEdit: false,
         allowReorder: false,
         allowDelete: false,
         reverseOrder: true,
-        el: jQuery(".restful"),
+        el: target,
         resources: {
             all: AJS.contextPath()+"/rest/upmonitor/latest/monitor/getAll",
             self: AJS.contextPath()+"/rest/upmonitor/latest/monitor"
@@ -127,55 +176,18 @@ function addRestfulTable(){
                  id: "link",
                  header: "",
                  readView: getLink()
-             }
+            },
+            {
+               id: "notice",
+               header: "Notification",
+               readView: getNotice()
+            }
         ]
     });
 }
 
 jQuery(document).ready(function(){
-    var rt = new AJS.RestfulTable({
-        allowCreate: false,
-        allowEdit: false,
-        allowReorder: false,
-        allowDelete: false,
-        reverseOrder: true,
-        el: jQuery(".restful"),
-        resources: {
-            all: AJS.contextPath()+"/rest/upmonitor/latest/monitor/getAll",
-            self: AJS.contextPath()+"/rest/upmonitor/latest/monitor"
-        },
-        columns: [
-            {
-                id: "condition",
-                header: "Condition",
-                readView: getVersion(),
-            },
-            {
-                id: "component",
-                header: "Component",
-//                readView: getComponent()
-            },
-            {
-                id: "version",
-                header: "This version"
-            },
-            {
-                id: "creationDate",
-                header: "CreationDate"
-            },
-            {
-                id: "dependency",
-                header: "Dependency"
-            },
-            {
-                id: "description",
-                header: "Description"
-            },
-            {
-                 id: "link",
-                 header: "Link",
-                 readView: getLink()
-             }
-        ]
-    });
+    addRestfulTable(jQuery(".restful"));
+
+
 })

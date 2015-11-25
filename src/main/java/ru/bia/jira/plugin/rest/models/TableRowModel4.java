@@ -27,6 +27,8 @@ public class TableRowModel4 extends ModelUtilities {
     String description;
     @XmlElement
     String link;
+    @XmlElement
+    boolean notice;
 
     public TableRowModel4(MutableIssue mutableIssue, JSONArray pluginsInfo) {
         CustomFieldManager customFieldManager = ComponentAccessor.getCustomFieldManager();
@@ -38,6 +40,7 @@ public class TableRowModel4 extends ModelUtilities {
         this.creationDate = String.valueOf(mutableIssue.getCreated());
         this.dependency = String.valueOf(mutableIssue.getCustomFieldValue(customFieldManager.getCustomFieldObject(12703l)));
         this.description = mutableIssue.getDescription();
+        this.notice = true;
         if (link != null) {
             if (!link.equals("null")) {
                 this.link = link;
@@ -59,6 +62,7 @@ public class TableRowModel4 extends ModelUtilities {
             object.put("dependency", this.dependency);
             object.put("description", this.description);
             object.put("link", this.link);
+            object.put("notice", this.notice);
         } catch (Exception e){
 
         }

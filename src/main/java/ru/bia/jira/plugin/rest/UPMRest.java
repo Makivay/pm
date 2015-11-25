@@ -1,5 +1,6 @@
 package ru.bia.jira.plugin.rest;
 
+import com.atlassian.activeobjects.external.ActiveObjects;
 import com.atlassian.jira.component.ComponentAccessor;
 import com.atlassian.jira.issue.CustomFieldManager;
 import com.atlassian.jira.issue.IssueManager;
@@ -7,14 +8,15 @@ import com.atlassian.jira.project.Project;
 import com.atlassian.jira.project.ProjectManager;
 import com.atlassian.jira.util.json.JSONArray;
 import com.atlassian.jira.util.json.JSONObject;
+import com.atlassian.plugin.Plugin;
 import com.atlassian.plugins.rest.common.security.AnonymousAllowed;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
+import ru.bia.jira.plugin.Constants;
+import ru.bia.jira.plugin.ao.NoticeEntity;
 import ru.bia.jira.plugin.rest.models.TableRowModel4;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
@@ -22,6 +24,8 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+
+
 
 
 @Path("/monitor")
@@ -32,17 +36,16 @@ public class UPMRest {
     String baseUrl;
     OkHttpClient client;
 
-    private final String PROJECT_KEY = "JIRAPLUGIN";
-    private final String UPM_URL = "https://jira-test.dellin.ru/rest/plugins/1.0/";
-
     ProjectManager projectManager;
     IssueManager issueManager;
     CustomFieldManager customFieldManager;
+    ActiveObjects activeObjects;
 
-    public UPMRest() {
+    public UPMRest(ActiveObjects activeObjects) {
         this.issueManager = ComponentAccessor.getIssueManager();
         this.projectManager = ComponentAccessor.getProjectManager();
         this.customFieldManager = ComponentAccessor.getCustomFieldManager();
+        this.activeObjects = activeObjects;
         this.baseUrl = ComponentAccessor.getWebResourceUrlProvider().getBaseUrl();
         client = new OkHttpClient();
     }
@@ -53,7 +56,7 @@ public class UPMRest {
     public Response getSomething() {
         JSONArray answer = new JSONArray();
         try {
-            String resp = run("https://jira-test.dellin.ru/rest/plugins/1.0/");
+            String resp = run(Constants.UPM_URL);
             answer = new JSONObject(resp).getJSONArray("plugins");
         } catch (Exception e){
         }
@@ -65,12 +68,11 @@ public class UPMRest {
     @Path("/test2")
     public Response getSomething2() {
         JSONArray answer = new JSONArray();
-        final String name = "JIRAPLUGIN";
         Project project;
         Long aLong;
         Collection<Long> issues;
         try {
-            project = projectManager.getProjectByCurrentKey(name);
+            project = projectManager.getProjectByCurrentKey(Constants.PROJECT_KEY);
             if (project != null) {
                 aLong = project.getId();
                 issues = issueManager.getIssueIdsForProject(aLong);
@@ -106,12 +108,11 @@ public class UPMRest {
     @Path("/getAll")
     public Response getAll() {
         List<TableRowModel4> answer = new LinkedList<TableRowModel4>();
-        final String name = "JIRAPLUGIN";
         Project project;
         Long aLong;
         Collection<Long> issues;
         try {
-            project = projectManager.getProjectByCurrentKey(name);
+            project = projectManager.getProjectByCurrentKey(Constants.PROJECT_KEY);
             if (project != null) {
                 aLong = project.getId();
                 issues = issueManager.getIssueIdsForProject(aLong);
@@ -143,6 +144,59 @@ public class UPMRest {
         return Response.ok(jsonArray.toString()).build();
     }
 
+    @GET
+    @AnonymousAllowed
+    @Produces({MediaType.APPLICATION_JSON})
+    @Path("/getAll2")
+    public Response getAll2(){
+        Collection<Plugin> plugins = ComponentAccessor.getPluginAccessor().getPlugins();
+        for (Plugin plugin : plugins) {
+
+        }
+
+        return Response.ok().build();
+    }
+
+    @POST
+    @AnonymousAllowed
+    @Consumes({MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_JSON})
+    public Response noticeListManagement(final String request) throws Exception{
+
+
+
+        JSONObject jsonObject = new JSONObject(request);
+
+        String component = jsonObject.getString("component");
+        boolean notice  = jsonObject.getBoolean("notice");
+
+        NoticeEntity[] noticeEntities = activeObjects.find(NoticeEntity.class);
+        boolean found = false;
+        for (NoticeEntity entity : noticeEntities) {
+            if(component.equals(entity.getComponent())){
+                if(!notice){
+                    activeObjects.delete(entity);
+                }
+                found = true;
+                break;
+            }
+        }
+        if(!found){
+            if (notice){
+                NoticeEntity newNoticeEntity = activeObjects.create(NoticeEntity.class);
+                newNoticeEntity.setComponent(component);
+                newNoticeEntity.save();
+            }
+        }
+        String ver = ComponentAccessor.getPluginAccessor().getPlugin(component).getPluginInformation().getVersion();
+        JSONObject answer = new JSONObject();
+        answer.put("component", component);
+        answer.put("notice", notice);
+        answer.put("ver", ver);
+
+        return Response.ok(answer.toString()).build();
+    }
+
     public boolean compareData(String data1, String data2) {
         char cSelf;
         char cQuest;
@@ -162,7 +216,7 @@ public class UPMRest {
 
         JSONArray array;
         try {
-            String resp = run(UPM_URL);
+            String resp = run(Constants.UPM_URL);
             array = new JSONObject(resp).getJSONArray("plugins");
         } catch (Exception e) {
             array = null;
@@ -173,12 +227,14 @@ public class UPMRest {
    String run(String url) throws IOException {
         Request request = new Request.Builder()
                 .url(url)
-                .addHeader("Authorization", "Basic S01hdHZlZXY6N2FmR2hkZ0tUcVlZ")
+                .addHeader(Constants.HEADER_AUTH_NAME, Constants.HEADER_AUTH_VALUE)
                 .build();
 
         com.squareup.okhttp.Response response;
         response = client.newCall(request).execute();
         return response.body().string();
     }
+
+
 
 }

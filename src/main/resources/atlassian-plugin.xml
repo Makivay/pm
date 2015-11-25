@@ -20,7 +20,12 @@
         <resource type="download" name="images/" location="/images"/>
         <context>UniversalPluginMonitor</context>
     </web-resource>
-    
+
+    <web-resource key="PluginMonitor-error-resources" name="PluginMonitor Error Web Resources">
+        <dependency>com.atlassian.auiplugin:ajs</dependency>
+        <dependency>com.atlassian.auiplugin:aui-messages</dependency>
+        <context>UniversalPluginMonitorError</context>
+    </web-resource>
     <!-- publish our component -->
     <rest key="rest-module-unipm" path="/upmonitor" version="1.0">
         <description>Yes, this plugin realy use rest services.</description>
@@ -30,6 +35,7 @@
         <actions>
             <action name="ru.bia.jira.plugin.actions.MainAction" alias="pluginmonitor">
                 <view name="input">vm/Main.vm</view>
+                <view name="error">vm/Error.vm</view>
             </action>
         </actions>
     </webwork1>
@@ -39,7 +45,10 @@
         <link>/secure/pluginmonitor.jspa</link>
     </web-item>
 
-
+    <ao key="ao-module">
+        <entity>ru.bia.jira.plugin.ao.NoticeEntity</entity>
+    </ao>
     <!-- import from the product container -->
-
+    <component-import key="ao" name="Active Objects service" interface="com.atlassian.activeobjects.external.ActiveObjects">
+    </component-import>
 </atlassian-plugin>

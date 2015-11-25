@@ -2,7 +2,7 @@
 <head>
     <title>Plugins monitor</title>
     <meta name="decorator" content="atl.admin" />
-    $webResourceManager.requireResource("ru.bia.jira.plugins.PluginMonitor:PluginMonitor-resources")
+    $webResourceManager.requireResource("ru.bia.jira.plugins.PluginsMonitor:PluginMonitor-resources")
 
 </head>
 <body>
@@ -10,6 +10,9 @@
 <h1>Universal plugin monitor.</h1>.
 
 <table class='restful'>
+
 </table>
+
+</body>
 
 </html>
