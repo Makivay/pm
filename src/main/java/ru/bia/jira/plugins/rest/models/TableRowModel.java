@@ -1,4 +1,4 @@
-package ru.bia.jira.plugin.rest.models;
+package ru.bia.jira.plugins.rest.models;
 
 import com.atlassian.jira.component.ComponentAccessor;
 import com.atlassian.jira.issue.CustomFieldManager;
@@ -30,8 +30,8 @@ public class TableRowModel {
     public TableRowModel(MutableIssue mutableIssue) {
         CustomFieldManager customFieldManager = ComponentAccessor.getCustomFieldManager();
         this.component = mutableIssue.getComponentObjects().iterator().next().getName();
-        this.dependency = String.valueOf(mutableIssue.getCustomFieldValue(customFieldManager.getCustomFieldObject(12703l)));
-        this.link = String.valueOf(mutableIssue.getCustomFieldValue(customFieldManager.getCustomFieldObject(10004l)));
+        this.dependency = String.valueOf(mutableIssue.getCustomFieldValue(customFieldManager.getCustomFieldObject(12703L)));
+        this.link = String.valueOf(mutableIssue.getCustomFieldValue(customFieldManager.getCustomFieldObject(10004L)));
         this.version = ModelUtilities.getVersion(this.link);
     }
 }

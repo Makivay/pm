@@ -1,4 +1,4 @@
-package ru.bia.jira.plugin.actions;
+package ru.bia.jira.plugins.actions;
 
 import com.atlassian.jira.component.ComponentAccessor;
 import com.atlassian.jira.user.ApplicationUser;

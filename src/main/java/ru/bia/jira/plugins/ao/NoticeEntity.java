@@ -1,4 +1,4 @@
-package ru.bia.jira.plugin.ao;
+package ru.bia.jira.plugins.ao;
 
 import net.java.ao.Entity;
 import net.java.ao.Preload;

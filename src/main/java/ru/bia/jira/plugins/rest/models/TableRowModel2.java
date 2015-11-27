@@ -1,4 +1,4 @@
-package ru.bia.jira.plugin.rest.models;
+package ru.bia.jira.plugins.rest.models;
 
 import com.atlassian.jira.component.ComponentAccessor;
 import com.atlassian.jira.issue.CustomFieldManager;
@@ -28,7 +28,7 @@ public class TableRowModel2 {
     public TableRowModel2(MutableIssue issueObject) {
         CustomFieldManager customFieldManager = ComponentAccessor.getCustomFieldManager();
         this.component = issueObject.getComponentObjects().iterator().next().getName();
-        this.dependency = String.valueOf(issueObject.getCustomFieldValue(customFieldManager.getCustomFieldObject(12703l)));
-        this.link = "<a href="+String.valueOf(issueObject.getCustomFieldValue(customFieldManager.getCustomFieldObject(10004l)))+" >link</a>";
+        this.dependency = String.valueOf(issueObject.getCustomFieldValue(customFieldManager.getCustomFieldObject(12703L)));
+        this.link = "<a href="+String.valueOf(issueObject.getCustomFieldValue(customFieldManager.getCustomFieldObject(10004L)))+" >link</a>";
     }
 }

@@ -1,4 +1,4 @@
-package ru.bia.jira.plugin.rest.models;
+package ru.bia.jira.plugins.rest.models;
 
 /**
  * Created by Kmatveev on 23.11.2015.

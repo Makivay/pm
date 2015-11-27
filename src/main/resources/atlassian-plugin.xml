@@ -33,7 +33,7 @@
 
     <webwork1 key="AwesomnesMainPanel" name="AwesomnesMainPanel" i18n-name-key="AwesomnesMainPanel">
         <actions>
-            <action name="ru.bia.jira.plugin.actions.MainAction" alias="pluginmonitor">
+            <action name="ru.bia.jira.plugins.actions.MainAction" alias="pluginmonitor">
                 <view name="input">vm/Main.vm</view>
                 <view name="error">vm/Error.vm</view>
             </action>
@@ -45,8 +45,18 @@
         <link>/secure/pluginmonitor.jspa</link>
     </web-item>
 
+    <component-import key="pluginScheduler">
+        <description>SAL Scheduler</description>
+        <interface>com.atlassian.sal.api.scheduling.PluginScheduler</interface>
+    </component-import>
+
+    <component key="init" class="ru.bia.jira.plugins.Initializer">
+    </component>
+    <component key="NoticeScheduler" class="ru.bia.jira.plugins.schedulers.NoticeScheduler">
+    </component>
+
     <ao key="ao-module">
-        <entity>ru.bia.jira.plugin.ao.NoticeEntity</entity>
+        <entity>ru.bia.jira.plugins.ao.NoticeEntity</entity>
     </ao>
     <!-- import from the product container -->
     <component-import key="ao" name="Active Objects service" interface="com.atlassian.activeobjects.external.ActiveObjects">

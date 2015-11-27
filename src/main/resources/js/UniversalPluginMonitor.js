@@ -173,15 +173,15 @@ function addRestfulTable(target){
                 header: "Description"
             },
             {
+               id: "notice",
+               header: "Notification",
+               readView: getNotice()
+            },
+            {
                  id: "link",
                  header: "",
                  readView: getLink()
             },
-            {
-               id: "notice",
-               header: "Notification",
-               readView: getNotice()
-            }
         ]
     });
 }

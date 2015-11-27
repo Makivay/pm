@@ -1,4 +1,4 @@
-package ru.bia.jira.plugin;
+package ru.bia.jira.plugins;
 
 import com.atlassian.jira.component.ComponentAccessor;
 import com.atlassian.jira.config.properties.APKeys;
@@ -12,4 +12,7 @@ public class Constants {
     public static final String PROJECT_KEY = "JIRAPLUGIN";
     public static final String BASE_URL = ComponentAccessor.getApplicationProperties().getString(APKeys.JIRA_BASEURL);
     public static final String UPM_URL = BASE_URL + "/rest/plugins/1.0/";
+    public static final String SHEDULE_JOB_NAME = "Plugin monitor notifer.";
+    public static final Long SHEDULE_PERIOD = 3600000L;
+    public  static final String GROUP_JIRA_ADMINISTRATORS = "jira-administrators";
 }
