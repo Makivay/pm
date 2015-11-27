@@ -16,6 +16,15 @@ public class Constants {
     public static final Long SCHEDULE_PERIOD = 3600000L;
     public  static final String GROUP_JIRA_ADMINISTRATORS = "jira-administrators";
 //    public  static final Long CUSTOM_FIELD_DEPENDENCY = 12703L; // test
-    public  static final Long CUSTOM_FIELD_DEPENDENCY = 12800L; // work
-    public  static final Long CUSTOM_FIELD_LINK = 10004L;
+//    public static final Long CUSTOM_FIELD_DEPENDENCY = 12800L; // work
+    public static final Long CUSTOM_FIELD_LINK = 10004L;
+    public static final Long CUSTOM_FIELD_DEPENDENCY;
+    static {
+        if (BASE_URL.contains("test")) {
+            CUSTOM_FIELD_DEPENDENCY = 12703L;
+        } else {
+            CUSTOM_FIELD_DEPENDENCY = 12703L;
+        }
+    }
+
 }
