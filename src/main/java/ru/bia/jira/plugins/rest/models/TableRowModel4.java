@@ -5,6 +5,7 @@ import com.atlassian.jira.issue.CustomFieldManager;
 import com.atlassian.jira.issue.MutableIssue;
 import com.atlassian.jira.util.json.JSONArray;
 import com.atlassian.jira.util.json.JSONObject;
+import ru.bia.jira.plugins.Constants;
 import ru.bia.jira.plugins.ao.NoticeEntity;
 
 import javax.xml.bind.annotation.XmlElement;
@@ -33,13 +34,13 @@ public class TableRowModel4 extends ModelUtilities {
 
     public TableRowModel4(MutableIssue mutableIssue, JSONArray pluginsInfo, NoticeEntity[] noticeInfo) {
         CustomFieldManager customFieldManager = ComponentAccessor.getCustomFieldManager();
-        String link = String.valueOf(mutableIssue.getCustomFieldValue(customFieldManager.getCustomFieldObject(10004L)));
+        String link = String.valueOf(mutableIssue.getCustomFieldValue(customFieldManager.getCustomFieldObject(Constants.CUSTOM_FIELD_LINK)));
         this.component = mutableIssue.getComponentObjects().iterator().next().getName();
         this.condition = getCondition(pluginsInfo, this.component);
         this.version = ModelUtilities.getVersion(link);
         //TODO: SimpleDateFormat created = new SimpleDateFormat("dd-MM-yyyy hh:mm");
         this.creationDate = String.valueOf(mutableIssue.getCreated());
-        this.dependency = String.valueOf(mutableIssue.getCustomFieldValue(customFieldManager.getCustomFieldObject(12703L)));
+        this.dependency = String.valueOf(mutableIssue.getCustomFieldValue(customFieldManager.getCustomFieldObject(Constants.CUSTOM_FIELD_DEPENDENCY)));
         this.description = mutableIssue.getDescription();
         this.notice = getNotice(noticeInfo, this.component);
         if (link != null) {

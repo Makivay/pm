@@ -142,7 +142,7 @@ public class UPMRest {
                 if(!notice){
                     activeObjects.delete(entity);
                     debug.append("|notice was deleted|");
-//                    Scheduler.unscheduleJob(Constants.SHEDULE_JOB_NAME);
+//                    Scheduler.unscheduleJob(Constants.SCHEDULE_JOB_NAME);
 //                    log.debug("Stop Sheduling!");
                 }
                 found = true;
@@ -157,7 +157,7 @@ public class UPMRest {
                 newNoticeEntity.setComponent(component);
                 newNoticeEntity.save();
                 debug.append("|notice was saved|");
-//                pluginScheduler.scheduleJob(Constants.SHEDULE_JOB_NAME, NoticeScheduler.class, Collections.EMPTY_MAP , new Date(), Constants.SHEDULE_PERIOD);
+//                pluginScheduler.scheduleJob(Constants.SCHEDULE_JOB_NAME, NoticeScheduler.class, Collections.EMPTY_MAP , new Date(), Constants.SCHEDULE_PERIOD);
 //                log.debug("Start Sheduling!");
             }
         }

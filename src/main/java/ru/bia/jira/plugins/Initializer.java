@@ -29,7 +29,7 @@ public class Initializer implements InitializingBean, DisposableBean {
 
     @Override
     public void destroy() throws Exception {
-        pluginScheduler.unscheduleJob(Constants.SHEDULE_JOB_NAME);
+        pluginScheduler.unscheduleJob(Constants.SCHEDULE_JOB_NAME);
         log.debug("Stop sheduling. =(");
     }
 
@@ -41,7 +41,7 @@ public class Initializer implements InitializingBean, DisposableBean {
         Date startTime = new Date();
         startTime.setTime(startTime.getTime() + 5000L);
 
-        pluginScheduler.scheduleJob(Constants.SHEDULE_JOB_NAME, NoticeScheduler.class, params, startTime, Constants.SHEDULE_PERIOD);
+        pluginScheduler.scheduleJob(Constants.SCHEDULE_JOB_NAME, NoticeScheduler.class, params, startTime, Constants.SCHEDULE_PERIOD);
         log.debug("Start sheduling! =D");
 
     }
